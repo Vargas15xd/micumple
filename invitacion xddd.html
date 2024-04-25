@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Invitación a la Junta!</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            font-size: 32px;
+        }
+        p {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .info {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .decor {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+        }
+        .decor img {
+            width: 100%;
+            height: auto;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+        .cta {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .cta button {
+            display: inline-block;
+            background-color: #FFD700;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+        .cta button:hover {
+            background-color: #FFC72C;
+        }
+        .input-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 200px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="decor">
+            <img src="https://i.imgur.com/LRocRe6.jpg" alt="Decoración de Fiesta">
+        </div>
+        <div class="content">
+            <h1>¡Invitación a la Junta!</h1>
+            <p>¡Hola!</p>
+            <p>Estás cordialmente invitado a la junta de <strong>Vargas</strong>, quien cumplirá <strong>16 años</strong>.</p>
+            <div class="info">
+                <p><strong>Fecha:</strong> Sábado</p>
+                <p><strong>Dirección:</strong> Parque Altamura 453</p>
+            </div>
+            <p>¡Esperamos contar con tu presencia para celebrar este día especial!</p>
+            <div class="cta">
+                <button onclick="confirmarAsistencia()">Asistir</button>
+                <button onclick="noAsistir()">No Asistir</button>
+            </div>
+            <div class="input-container" id="nombreContainer" style="display: none;">
+                <input type="text" id="nombre" placeholder="Tu nombre">
+                <button onclick="enviarFormulario()">Enviar</button>
+            </div>
+            <p id="mensajeConfirmacion" style="display: none;">¡Gracias por confirmar tu asistencia!</p>
+            <p id="mensajeNoAsistencia" style="display: none;">Bonito fin de semana.</p>
+            <p>Atentamente,</p>
+            <p>El Equipo de Organización</p>
+            <div class="cta">
+                <button onclick="guardarNombres()">Guardar Nombres</button>
+                <button onclick="compartirPagina()">Compartir Página</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script>
+        var nombresConfirmados = [];
+
+        function confirmarAsistencia() {
+            document.getElementById("nombreContainer").style.display = "block";
+            document.getElementById("mensajeConfirmacion").style.display = "block";
+            document.getElementById("mensajeNoAsistencia").style.display = "none";
+        }
+
+        function noAsistir() {
+            document.getElementById("nombreContainer").style.display = "none";
+            document.getElementById("mensajeConfirmacion").style.display = "none";
+            document.getElementById("mensajeNoAsistencia").style.display = "block";
+        }
+
+        function enviarFormulario() {
+            var nombre = document.getElementById("nombre").value;
+            if (nombre.trim() !== "") {
+                nombresConfirmados.push(nombre);
+                alert("¡Gracias por confirmar tu asistencia, " + nombre + "!");
+            } else {
+                alert("Por favor, ingresa tu nombre.");
+            }
+        }
+
+        function guardarNombres() {
+            var contenido = "Nombres confirmados:\n";
+            for (var i = 0; i < nombresConfirmados.length; i++) {
+                contenido += nombresConfirmados[i] + "\n";
+            }
+
+            var blob = new Blob([contenido], { type: "text/plain;charset=utf-8" });
+            saveAs(blob, "nombres_confirmados.txt");
+        }
+
+        function compartirPagina() {
+            var enlace = window.location.href;
+            if (navigator.share) {
+                navigator.share({
+                    title: '¡Invitación a la Junta!',
+                    text: '¡Estás cordialmente invitado!',
+                    url: enlace
+                }).then(() => {
+                    console.log('Pagina compartida con éxito.');
+                })
+                .catch((error) => {
+                    console.error('Error al compartir la página:', error);
+                });
+            } else {
+                alert('Lo siento, la función de compartir no está disponible en este navegador.');
+            }
+        }
+
+        window.onbeforeunload = function() {
+            guardarNombres();
+        };
+    </script>
+</body>
+</html>
+x
